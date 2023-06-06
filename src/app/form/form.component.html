@@ -1,0 +1,42 @@
+<form #userForm="ngForm" (ngSubmit)="onSubmit(userForm.form.value)">
+  <div class="mb-3">
+    <label class="form-label" for="name">Имя:</label>
+    <input #name="ngModel" [(ngModel)]="user.name" class="form-control" id="name"
+           maxlength="10"
+           minlength="4"
+           name="name"
+           required
+           type="text">
+    <div *ngIf="name.invalid && (name.dirty || name.touched)" class="alert alert-danger">
+      <div *ngIf="name.errors?.['required']">
+        Имя обязательно.
+      </div>
+      <div *ngIf="name.errors?.['minlength']">
+        Имя должно содержать минимум 4 символа.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label" for="age">Возраст:</label>
+    <input #age="ngModel" [(ngModel)]="user.age" class="form-control" id="age" name="age" required type="text">
+    <div *ngIf="age.invalid && (age.dirty || age.touched)" class="alert alert-danger">
+      <div *ngIf="age.errors?.['required']">
+        Возраст обязателен..
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label" for="role">Роль:</label>
+    <select [(ngModel)]="user.role" class="form-select" id="role" name="role">
+      <option disabled selected value="">Выберите роль</option>
+      <option *ngFor="let role of roles" [value]="role">{{role}}</option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <button class="btn btn-info" type="submit">Сохранить</button>
+  </div>
+</form>
