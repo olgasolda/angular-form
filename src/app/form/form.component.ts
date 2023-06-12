@@ -1,6 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators} from "@angular/forms";
-import {emailValidator, rangeValidator} from "../custom.validators";
+import {emailValidator, observableUrlValidator, rangeValidator} from "../custom.validators";
+import {
+  FORM_ERRORS,
+  FORM_LABELS,
+  FORM_PLACEHOLDERS,
+  FORM_ROLES,
+  FORM_SUCCESS,
+  FORM_VALIDATION_MESSAGES
+} from "../form-data";
 
 @Component({
   selector: 'app-form',
@@ -11,71 +19,38 @@ export class FormComponent implements OnInit {
 
   userForm!: FormGroup;
 
-  roles: string[] = ['Гость', 'Модератор', 'Администратор'];
-
-  formErrors: any = {
-    name: '',
-    password: '',
-    email: '',
-    age: '',
-    role: ''
-  };
-
-  formSuccess = {
-    name: 'Принято!',
-    password: 'Принято!',
-    email: 'Принято!',
-    age: 'Принято!',
-    role: 'Принято!'
-  };
-
-  validationMessages: any = {
-    name: {
-      required: 'Имя обязательно.',
-      minlength: 'Имя должно содержать не менее 4 символов.',
-      maxlength: 'Имя должно содержать не более 15 символов.'
-    },
-    password: {
-      required: 'Пароль обязателен.',
-      minlength: 'Пароль должен содержать не менее 7 символов.',
-      maxlength: 'Пароль должен содержать не более 25 символов.'
-    },
-    email: {
-      required: 'Email обязателен.',
-      emailValidator: 'Неправильный формат email адреса.',
-    },
-    age: {
-      required: 'Возраст обязателен.',
-      rangeMustBeNumber: 'Значение должно быть целым числом в диапазоне 1...122',
-      rangeMinValue: 'Значение должно быть больше или равно 1.',
-      rangeMaxValue: 'Значение должно быть меньше или равно 122.',
-    },
-    role: {
-      required: 'Роль обязательна.'
-    }
-  };
+  roles: string[] = FORM_ROLES;
+  formLabels = FORM_LABELS;
+  formPlaceholder = FORM_PLACEHOLDERS;
+  formErrors: any = FORM_ERRORS;
+  formSuccess = FORM_SUCCESS;
+  validationMessages: any = FORM_VALIDATION_MESSAGES;
 
   constructor(private fb: FormBuilder) {
   }
 
   get name(): AbstractControl {
-    return this.userForm.controls['name']
+    return this.userForm.controls['name'];
   }
 
   get password(): AbstractControl {
-    return this.userForm.controls['password']
+    return this.userForm.controls['password'];
   }
 
   get email(): AbstractControl {
-    return this.userForm.controls['email']
+    return this.userForm.controls['email'];
   }
 
   get age(): AbstractControl {
-    return this.userForm.controls['age']
+    return this.userForm.controls['age'];
+  }
+
+  get site(): AbstractControl {
+    return this.userForm.controls['site'];
   }
 
   get role(): AbstractControl {
-    return this.userForm.controls['role']
+    return this.userForm.controls['role'];
   }
 
 
@@ -99,7 +74,7 @@ export class FormComponent implements OnInit {
         const messages = this.validationMessages[fieldName];
 
         Object.keys(control.errors as ValidationErrors).every(key => {
-          this.formErrors[fieldName] = messages[key]
+          this.formErrors[fieldName] = messages[key];
         });
       }
     });
@@ -111,6 +86,7 @@ export class FormComponent implements OnInit {
       password: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(25)]],
       email: [null, [Validators.required, emailValidator]],
       age: [null, [Validators.required, rangeValidator(1, 122)]],
+      site: [null, [Validators.required], [observableUrlValidator]],
       role: [null, [Validators.required]]
     });
 
